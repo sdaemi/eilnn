@@ -9,7 +9,6 @@ respective 8bit label fields.
 
 The images are divided in validation and test subsets, with folders in model-readable formats
 """
-#write docs for functions etc
 from PIL import Image
 import numpy as np
 from skimage import measure, morphology
@@ -101,6 +100,7 @@ class ImportUtils:
          
         segmentations = []
         polygons = []
+        
         for contour in contours:
             for i in range(len(contour)):
                 row, col = contour[i]
@@ -119,6 +119,8 @@ class ImportUtils:
         bbox = (x, y, width, height)
         area = multi_poly.area         
          
+        ##### Create individual particle annotaions here 
+        
         regions_model = {
             "{}".format(annotation_id):{
                  
@@ -197,11 +199,13 @@ class ImportUtils:
         '''
         model_json_export = {}
         multi_regions = []
+        
+        ##### Loop through each individual image and  generate sub mask and annotations.
+        
         for  file_id, (gray_image, mask_image, gray_filename) in \
             enumerate(zip(*data)):
                 #try:
         
-
                  mask_image_np = np.asarray(mask_image)
                  mask_image_max = (mask_image_np).max()
                  mask_image_min = (mask_image_np).min()
@@ -228,22 +232,26 @@ class ImportUtils:
  
                  for color, sub_mask in sub_masks.items():
                      #try:
-                     
                      model_annotations, area = self.create_sub_mask_annotation(sub_mask,annotation_id)
+                     
+                     ###### Filter smaller artefacts as these crash the model 
+                     
                      if area>=500:
                          particle_regions.append(model_annotations)
                          annotation_id += 1
                          all_area.append(area)
+                         
                      elif area<500:
                          continue
  
-                     
-                 all_area.sort()    
- 
+                                     
                  image_id +=1
                  model_regions_dict={}
                  
                  print('Saving {} to /data/{} folder..'.format(gray_filename, data_subset))
+                 
+                 ##### Merge individual particle annotations into single .json
+                 
                  for region,particle_region in enumerate(particle_regions):
                      model_regions_dict.update(particle_region)
                      multi_region = {"filename":gray_filename, "regions":model_regions_dict}
@@ -251,7 +259,8 @@ class ImportUtils:
                      multi_regions.append(multi_region)
                 #except:
                     #continue
-                
+        
+        ##### Save annotation
         print('Merging annotations..')
         self.json_annotations = {"image_data":multi_regions[:]}
         print('Saving json..')
@@ -284,6 +293,8 @@ class ImportUtils:
      
         for subset in self.data_subset:
             
+            ##### Create folders for training and validation subsets
+            
             print('Processing {}..'.format(subset))
             self.out_dir = os.path.join(self.root_dir,subset,'data/')
             if os.path.exists(self.out_dir):
@@ -301,6 +312,8 @@ class ImportUtils:
             print(gray_dir)
             masks_dir = os.path.join(self.ann_dir,'masks/')
             
+            ##### Read grayscale images and labels
+            
             self.gray_list = [cv2.imread(os.path.join(gray_dir+i),1) \
                               for i in os.listdir(gray_dir) if str("".join(filter(str.isdigit,i)))][first_im::step]
             self.gray_filenames =[i \
@@ -311,10 +324,11 @@ class ImportUtils:
             print(np.asarray(self.gray_list).shape)
             print('Images Loaded..')
 
-            
             train_vars, val_vars = self.train_validation_split(self.gray_list, self.mask_list, self.gray_filenames, val_split)
             data = [train_vars, val_vars]
             data_subset = ['train','val']
+            
+            ##### Generate annotaions
             
             for n, data in enumerate(data):
                 self.process_annotations(data, data_subset[n])
