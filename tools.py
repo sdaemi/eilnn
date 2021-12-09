@@ -4,6 +4,7 @@ Created on Wed Dec  8 11:45:37 2021
 
 @author: Sohrab Daemi @ EIL
 """
+############# Write docstrings for each function, re-import necessary modules etc
 
 def view_GPU():
         import tensorflow as tf
