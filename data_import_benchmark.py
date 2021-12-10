@@ -339,6 +339,6 @@ if __name__ == "__main__":
 
     val_split = 0.2
     first_im = 1
-    folder = ['subset_4']
+    folder = ['subset_3']
     test = ImportUtils('C:/Users/Sohrab/Documents/crack/EILNet_tf2/images/', folder)
     test.create_annotations(val_split, first_im) 
