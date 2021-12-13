@@ -336,9 +336,10 @@ class ImportUtils:
    
 
 if __name__ == "__main__":
-
+    cwd = os.getcwd()
     val_split = 0.2
     first_im = 1
-    folder = ['subset_3']
-    test = ImportUtils('C:/Users/Sohrab/Documents/crack/EILNet_tf2/images/', folder)
+    folder = ['test_data']
+    test = ImportUtils(cwd, folder)
     test.create_annotations(val_split, first_im) 
+
