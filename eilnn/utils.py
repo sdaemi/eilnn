@@ -26,8 +26,7 @@ def load_grayscale(grayscale_path):
 
     '''
     
-    image_stack = np.asarray([cv2.imread(os.path.join(grayscale_path,i),1) / 
-                              for i in os.listdir(grayscale_path) if str("".join(filter(str.isdigit,i)))])
+    image_stack = np.asarray([cv2.imread(os.path.join(grayscale_path,i),1) for i in os.listdir(grayscale_path) if str("".join(filter(str.isdigit,i)))])
     # raise error if its not 3D, check for correct format
     return image_stack
 
@@ -51,8 +50,7 @@ def load_label(label_path):
         DESCRIPTION.
 
     '''
-    label_stack = np.asarray([cv2.imread(os.path.join(label_path,i),0) / 
-                              for i in os.listdir(label_path) if str("".join(filter(str.isdigit,i)))])
+    label_stack = np.asarray([cv2.imread(os.path.join(label_path,i),0) for i in os.listdir(label_path) if str("".join(filter(str.isdigit,i)))])
     # raise error if its not 3D
     return label_stack
 
