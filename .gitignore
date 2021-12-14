@@ -1,3 +1,4 @@
 eilnn.egg-info/
 eilnn/__pycache__/
 test_data/data/
+*.py

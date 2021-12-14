@@ -25,6 +25,7 @@ def load_grayscale(grayscale_path):
         3D grayscale image stack
 
     '''
+    
     image_stack = np.asarray([cv2.imread(os.path.join(grayscale_path,i),1) / 
                               for i in os.listdir(grayscale_path) if str("".join(filter(str.isdigit,i)))])
     # raise error if its not 3D, check for correct format
