@@ -7,7 +7,7 @@ import unittest
 
 class TestUtils(unittest.TestCase):
     def test_load_grayscale(self):
-        print(test)
+        image_stack = eilnn.load_grayscale('test_gray_slices')
         
         
 if __name__ == '__main__':

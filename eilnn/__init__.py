@@ -7,5 +7,5 @@ battery electrodes using neural networks
 from .data_import_benchmark import *
 from .tools import *
 from .utils import *
-
+from .definitions import *
 __version__ = "0.0.1"
