@@ -10,8 +10,9 @@ class TestDataImportBenchmark(unittest.TestCase):
         root = eilnn.ROOT_DIR
         val_split = 0.2
         first_im = 1
-        folder = ['test_data']
-        test = eilnn.ImportUtils(root, folder)
+        folder = "test_data"
+        image_folder = os.path.join(root, folder)
+        test = eilnn.ImportUtils(image_folder)
         test.create_annotations(val_split, first_im)
 
 

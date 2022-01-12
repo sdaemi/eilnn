@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 13 13:39:36 2021
-Collection of tools and functions used around different notebooks.
+Collection of tools.
+
 @author: Sohrab Daemi
 """
 import os
 import pandas as pd
-#import tf2pandas
+
+# import tf2pandas
 import seaborn as sns
 import cv2
 import eilnn
@@ -30,8 +32,8 @@ def load_grayscale(grayscale_path):
         3D grayscale image stack
 
     """
-    print('Loading images in: ' + grayscale_path)
-    
+    print("Loading images in: " + grayscale_path)
+
     image_stack = np.asarray(
         [
             cv2.imread(os.path.join(grayscale_path, i), 1)
@@ -39,9 +41,11 @@ def load_grayscale(grayscale_path):
             if str("".join(filter(str.isdigit, i)))
         ]
     )
- 
+
     if len(image_stack.shape) < 3:
-        raise ValueError('Image stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder')
+        raise ValueError(
+            "Image stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder"
+        )
 
     return image_stack
 
@@ -63,8 +67,8 @@ def load_label(label_path):
         3D 8bit label stack
 
     """
-    print('Loading images in: ' + label_path)
-    
+    print("Loading images in: " + label_path)
+
     label_stack = np.asarray(
         [
             cv2.imread(os.path.join(label_path, i), 0)
@@ -72,9 +76,11 @@ def load_label(label_path):
             if str("".join(filter(str.isdigit, i)))
         ]
     )
-    
+
     if len(label_stack.shape) < 3:
-        raise ValueError('Label stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder')
+        raise ValueError(
+            "Label stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder"
+        )
 
     return label_stack
 
@@ -94,10 +100,10 @@ def save_labels(label_field, label_folder):
 
     label_field_export = ((label_field * 1) * 255).astype("uint8")
     out_dir = label_folder
-    
-    if(label_field_export.size == 0):
-        raise ValueError('Stack for export is empty')
-    
+
+    if len(label_field_export.size) < 3:
+        raise ValueError("Stack for export has incorrect dimensions.")
+
     if os.path.exists(out_dir):
         shutil.rmtree(out_dir)
         os.mkdir(out_dir)
@@ -105,15 +111,11 @@ def save_labels(label_field, label_folder):
         os.mkdir(out_dir)
 
     print("Saving labels in " + out_dir)
-    
+
     for i in range(0, label_field.shape[0]):
         filename = "label_" + str(i) + ".tiff"
         save_path = os.path.join(out_dir, filename)
         cv2.imwrite(save_path, label_field_export[i, :, :])
-
-   
-
-
 
 
 def view_GPU():
@@ -130,41 +132,21 @@ def view_GPU():
     print(tf.__version__)
     from tensorflow.python.client import device_lib
 
-    # check if no gpu's found
-    return print(device_lib.list_local_devices())
-
-
-# def last_log(logdir):
-
-    # subsets = ["train", "validation"]
-    # data = pd.DataFrame()
-    # for subset in subsets:
-    #     path_folder = os.listdir(logdir)[-1]
-    #     log_name = str(os.listdir(os.path.join(logdir, path_folder, subset))[0])
-    #     path_log = os.path.join(logdir, path_folder, subset, log_name)
-    #     data_subset = tf2pandas.tflog2pandas(path_log)
-    #     if subset == "validation":
-    #         data_subset["subset"] = "val"
-    #     else:
-    #         data_subset["subset"] = "train"
-    #     data = data.append(data_subset, ignore_index=True)
-    # g = sns.FacetGrid(
-    #     data, col="metric", hue="subset", aspect=1, height=3, ylim=[0, 1.5]
-    # )
-    # g.map(sns.lineplot, "step", "value", alpha=0.8)
-    # g.add_legend()
-    # return []
-
-
-def get_last_weights(logdir):
-    model_folder = os.listdir(logdir)[-1]
-    weights_name = os.listdir(os.path.join(logdir, model_folder))[-3]
-    return os.path.join(logdir, model_folder, weights_name)
+    print(device_lib.list_local_devices())
 
 
 def check_augmentation(dataset, augmentation):
-    # check agumentation
-    ## view agumentation
+    """
+    Visualises effect of image agumentation on image from dataset
+
+    Parameters
+    ----------
+    dataset : Mask R-CNN image collection
+        Collection of images loaded and formatted using Mask R-CNN load_particles() function, part of the ParticlesDataset class.
+    augmentation : image augmentation used with imgaug package
+        DESCRIPTION.
+
+    """
     image_id = random.choice(dataset.image_ids)
     original_image = dataset.load_image(image_id)
     original_mask, class_ids = dataset.load_mask(image_id)
