@@ -269,7 +269,7 @@ class ImportUtils:
         with open(export_path, "w") as outfile:
             json.dump(self.json_annotations, outfile)
 
-    def create_annotations(self, val_split=0.2, first_im=1, step=10):
+    def create_annotations(self, val_split=0.2, first_im=1, step=2):
 
         """
         Function imports grayscale and label fields for further processing, creates folders for
@@ -344,7 +344,7 @@ if __name__ == "__main__":
     cwd_parent = cwd.parent.absolute()
     val_split = 0.2
     first_im = 1
-    folder = "images/test_data_temp"
+    folder = "images/test_annotations"
     image_path = os.path.join(cwd_parent, folder)
     test = ImportUtils(image_path)
     test.create_annotations(val_split, first_im)

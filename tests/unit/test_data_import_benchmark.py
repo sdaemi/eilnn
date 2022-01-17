@@ -37,3 +37,4 @@ class TestDataImportBenchmark(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    #print(eilnn.IMAGES_DIR)

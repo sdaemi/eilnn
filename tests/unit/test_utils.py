@@ -5,11 +5,16 @@
 import eilnn
 import unittest
 import os
-
+import numpy as np
 
 class TestUtils(unittest.TestCase):
     def test_load_grayscale(self):
-        image_stack = eilnn.load_grayscale("images/test_gray_slices")
+        
+        root = eilnn.IMAGES_DIR
+        subset = "test_gray_slices"
+        fp = os.path.join(root, subset)
+        image_stack = eilnn.load_grayscale(fp)
+        
         assert len(image_stack.shape) == 4
 
     def test_load_grayscale_error(self):
@@ -25,7 +30,10 @@ class TestUtils(unittest.TestCase):
         os.rmdir(fp)
 
     def test_load_label(self):
-        label_stack = eilnn.load_label("images/test_annotations")
+        root = eilnn.IMAGES_DIR
+        subset = "test_annotations"
+        fp = os.path.join(root, subset)
+        label_stack = eilnn.load_label(fp)
         assert len(label_stack.shape) == 4
 
     def test_load_label_error(self):
@@ -38,9 +46,15 @@ class TestUtils(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.test_load_label()
         # Remove the folder
+        os.rmdir(fp)
 
     def test_save_label(self):
-        eilnn.save("images/test_export")
+        root = eilnn.IMAGES_DIR
+        subset = 'test_annotations'
+        fp = os.path.join(root, subset)
+        
+        label_stack = eilnn.load_label(fp)
+        eilnn.save_labels("images/test_export")
 
     def test_save_label_error(self):
         # try save a 2D array
@@ -51,7 +65,9 @@ class TestUtils(unittest.TestCase):
         os.mkdir(fp)
         with self.assertRaises(ValueError):
             self.test_save_label(error_data)
+        os.rmdir(fp)
 
 
 if __name__ == "__main__":
-    unittest.main()
+        unittest.main()
+

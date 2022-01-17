@@ -43,7 +43,7 @@ def load_grayscale(grayscale_path):
         ]
     )
     
-    middle_slice = image_stack.shape[0]/2
+    middle_slice = int(image_stack.shape[0]/2)
     plt.imshow(image_stack[middle_slice])
     print('Stack Dimensions ', str(image_stack.shape))
     
