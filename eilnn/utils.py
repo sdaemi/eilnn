@@ -86,14 +86,15 @@ def load_label(label_path):
     plt.imshow(label_stack[middle_slice])
     print('Stack Dimensions ', str(label_stack.shape))
     
-    #### Turn label stack into binary (0, 1), regardless of input
-    label_stack = np.where(label_stack>0, 1, 0)
+
     
     if len(label_stack.shape) < 3:
         raise ValueError(
             "Label stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder"
         )
-
+    #### Turn label stack into binary (0, 1), regardless of input
+    label_stack = np.where(label_stack>0, 1, 0)
+    
     return label_stack
 
 
@@ -113,7 +114,7 @@ def save_labels(label_field, label_folder):
     label_field_export = ((label_field * 1) * 255).astype("uint8")
     out_dir = label_folder
 
-    if len(label_field_export.size) < 3:
+    if len(label_field_export.shape) < 3:
         raise ValueError("Stack for export has incorrect dimensions.")
 
     if os.path.exists(out_dir):
