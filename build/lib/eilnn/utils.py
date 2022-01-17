@@ -14,7 +14,6 @@ import cv2
 import eilnn
 import numpy as np
 import shutil
-import matplotlib.pyplot as plt
 
 
 def load_grayscale(grayscale_path):
@@ -42,11 +41,7 @@ def load_grayscale(grayscale_path):
             if str("".join(filter(str.isdigit, i)))
         ]
     )
-    
-    middle_slice = image_stack.shape[0]/2
-    plt.imshow(image_stack[middle_slice])
-    print('Stack Dimensions ', str(image_stack.shape))
-    
+
     if len(image_stack.shape) < 3:
         raise ValueError(
             "Image stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder"
@@ -81,14 +76,7 @@ def load_label(label_path):
             if str("".join(filter(str.isdigit, i)))
         ]
     )
-    
-    middle_slice = int(label_stack.shape[0]/2)
-    plt.imshow(label_stack[middle_slice])
-    print('Stack Dimensions ', str(label_stack.shape))
-    
-    #### Turn label stack into binary (0, 1), regardless of input
-    label_stack = np.where(label_stack>0, 1, 0)
-    
+
     if len(label_stack.shape) < 3:
         raise ValueError(
             "Label stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder"
