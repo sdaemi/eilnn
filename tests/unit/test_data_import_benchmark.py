@@ -2,6 +2,7 @@
 # Tests the ImportUtils class.
 #
 import eilnn
+import os
 import unittest
 
 
@@ -23,12 +24,12 @@ class TestDataImportBenchmark(unittest.TestCase):
         json_train = os.path.join(folder_train, 'annotations.json')
         json_val = os.path.join(folder_val, 'annotations.json')
         
-        if json_train.is_file():
+        if os.path.exists(json_train):
             print('Training annotations saved correctly.')
         else:
             print('Training annotations not saved.')
         
-        if json_val.is_file():
+        if os.path.exists(json_val):
             print('Validation annotations saved correctly.')
         else:
             print('Validation annotations not saved.')
