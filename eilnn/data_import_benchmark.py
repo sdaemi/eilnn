@@ -66,7 +66,7 @@ class ImportUtils:
     def create_sub_mask_annotation(self, sub_mask, annotation_id):
 
         """
-        Finds contours of each individual sub-mask and saves the values in a dictionary 
+        Finds contours of each individual sub-mask and saves the values in a dictionary
         which is then merged in a .json file.
 
         Parameters
@@ -174,7 +174,7 @@ class ImportUtils:
 
         """
         Processes train and validation datasets split and shuffled by the train_validation_split.
-        Generates sub-mask annotations and merges and saves them into .json file 
+        Generates sub-mask annotations and merges and saves them into .json file
 
         Parameters
         ----------

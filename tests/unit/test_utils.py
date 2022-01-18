@@ -7,14 +7,15 @@ import unittest
 import os
 import numpy as np
 
+
 class TestUtils(unittest.TestCase):
     def test_load_grayscale(self):
-        
+
         root = eilnn.IMAGES_DIR
         subset = "test_gray_slices"
         fp = os.path.join(root, subset)
         image_stack = eilnn.load_grayscale(fp)
-        
+
         assert len(image_stack.shape) == 4
 
     def test_load_grayscale_error(self):
@@ -50,10 +51,10 @@ class TestUtils(unittest.TestCase):
 
     def test_save_label(self):
         root = eilnn.IMAGES_DIR
-        subset = 'test_annotations'
+        subset = "test_annotations"
         fp = os.path.join(root, subset)
-        fp_export = os.path.join(root, 'test_save')
-        
+        fp_export = os.path.join(root, "test_save")
+
         label_stack = eilnn.load_label(fp)
         eilnn.save_labels(label_stack, fp_export)
 
@@ -64,12 +65,11 @@ class TestUtils(unittest.TestCase):
         subset = "test_label"
         fp = os.path.join(root, subset)
         os.mkdir(fp)
-        
+
         with self.assertRaises(ValueError):
             eilnn.save_labels(error_data, fp)
         os.rmdir(fp)
 
 
 if __name__ == "__main__":
-        unittest.main()
-
+    unittest.main()

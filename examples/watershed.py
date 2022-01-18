@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import os
 from edt import edt
 from skimage.segmentation import watershed
-from skimage.morphology import ball, disk, square, cube
+# from skimage.morphology import ball, disk, square, cube
 from skimage.measure import block_reduce
 import eilnn
 
