@@ -6,7 +6,7 @@ import os
 import unittest
 
 
-class TestDataImportBenchmark(unittest.TestCase):
+class TestAnnotationCreator(unittest.TestCase):
     def test_ImportUtils(self):
         root = eilnn.IMAGES_DIR
         val_split = 0.2
