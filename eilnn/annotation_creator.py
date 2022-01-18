@@ -106,8 +106,6 @@ class ImportUtils:
 
         multi_poly = MultiPolygon(polygons)
         x, y, max_x, max_y = multi_poly.bounds
-        width = max_x - x
-        height = max_y - y
         area = multi_poly.area
 
         # Create individual particle annotaions here
@@ -124,8 +122,8 @@ class ImportUtils:
         }
         return regions_model, area
 
-    def train_validation_split(self, gray_list, mask_list,\
-         gray_filenames, val_split):
+    def train_validation_split(self, gray_list, mask_list,
+     gray_filenames, val_split):
 
         """
         Shuffles and divides data into train and test subsets for annotation creation
@@ -141,7 +139,7 @@ class ImportUtils:
             List containing all grayscale filenames (used in json file and
             when copying images).
         val_split : float
-            Percent split of validation data..
+            Percent split of validation data.
 
         Returns
         -------
@@ -149,7 +147,7 @@ class ImportUtils:
             list containing shuffled and split lists of training images,
             training labels grayscale image filenames.
         val_vars : list
-            list containing shuffled and split lists of validation images, 
+            list containing shuffled and split lists of validation images,
             training labels grayscale image filenames.
 
         """
@@ -162,9 +160,9 @@ class ImportUtils:
         gray_names_train = gray_names_shuff[0:train_len]
         mask_list_train = mask_list_shuff[0:train_len]
 
-        gray_list_val = gray_list_shuff[train_len + 1 :]
-        gray_names_val = gray_names_shuff[train_len + 1 :]
-        mask_list_val = mask_list_shuff[train_len + 1 :]
+        gray_list_val = gray_list_shuff[train_len + 1:]
+        gray_names_val = gray_names_shuff[train_len + 1:]
+        mask_list_val = mask_list_shuff[train_len + 1:]
 
         train_vars = [gray_list_train, mask_list_train, gray_names_train]
         val_vars = [gray_list_val, mask_list_val, gray_names_val]
@@ -174,7 +172,7 @@ class ImportUtils:
     def process_annotations(self, data, data_subset):
 
         """
-        Processes train and validation datasets split and shuffled by 
+        Processes train and validation datasets split and shuffled by
         the train_validation_split.
         Generates sub-mask annotations and merges and saves them into .json file
 
@@ -190,7 +188,7 @@ class ImportUtils:
         None.
 
         """
-        model_json_export = {}
+        #model_json_export = {}
         multi_regions = []
 
         # Loop through each individual image and  generate sub mask and annotations.
@@ -199,12 +197,9 @@ class ImportUtils:
             try:
 
                 mask_image_np = np.asarray(mask_image)
-                mask_image_max = (mask_image_np).max()
-                mask_image_min = (mask_image_np).min()
-
                 annotation_id = 1
                 image_id = 1
-                annotations = []
+                
                 particle_regions = []
 
                 # Ensures that whatever the mask image format (8 or 16bit),
@@ -275,8 +270,9 @@ class ImportUtils:
     def create_annotations(self, val_split=0.2, first_im=1, step=2):
 
         """
-        Function imports grayscale and label fields for further processing, creates folders for
-        export and splits data into test and train arrays before creating annotations.
+        Function imports grayscale and label fields for further processing, 
+        creates folders for export and splits data into test and train arrays
+        before creating annotations.
 
         Parameters
         ----------

@@ -6,15 +6,15 @@ Collection of tools.
 @author: Sohrab Daemi
 """
 import os
-import pandas as pd
-
-# import tf2pandas
-import seaborn as sns
 import cv2
-import eilnn
 import numpy as np
 import shutil
 import matplotlib.pyplot as plt
+import random
+import imgaug
+from mrcnn import utils
+from mrcnn import visualize
+from mrcnn.visualize import display_images
 
 
 def load_grayscale(grayscale_path):
@@ -49,7 +49,8 @@ def load_grayscale(grayscale_path):
 
     if len(image_stack.shape) < 3:
         raise ValueError(
-            "Image stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder"
+            "Image stack is not 3D/has not been loaded properly - \
+                ensure there are no numbered folders contained in the stack folder"
         )
 
     return image_stack
@@ -88,9 +89,10 @@ def load_label(label_path):
 
     if len(label_stack.shape) < 3:
         raise ValueError(
-            "Label stack is not 3D/has not been loaded properly - ensure there are no numbered folders contained in the stack folder"
+            "Label stack is not 3D/has not been loaded properly - ensure there \
+             are no numbered folders contained in the stack folder"
         )
-    #### Turn label stack into binary (0, 1), regardless of input
+    # Turn label stack into binary (0, 1), regardless of input
     label_stack = np.where(label_stack > 0, 1, 0)
 
     return label_stack
@@ -153,7 +155,8 @@ def check_augmentation(dataset, augmentation):
     Parameters
     ----------
     dataset : Mask R-CNN image collection
-        Collection of images loaded and formatted using Mask R-CNN load_particles() function, part of the ParticlesDataset class.
+        Collection of images loaded and formatted using Mask R-CNN load_particles() function,
+        part of the ParticlesDataset class.
     augmentation : image augmentation used with imgaug package
         DESCRIPTION.
 
