@@ -4,9 +4,9 @@
 A tool for segmenting and classifying particle data from tomography images of
 battery electrodes using neural networks
 """
-import annotation_creator
-from .utils import load_grayscale, load_label, save_labels, view_GPU
-import definitions
+from .annotation_creator import *
+from .tools import *
+from .utils import *
 
 
 __version__ = "0.0.1"
