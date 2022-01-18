@@ -8,4 +8,5 @@ import annotation_creator
 from .utils import load_grayscale, load_label, save_labels, view_GPU
 import definitions
 
+
 __version__ = "0.0.1"
