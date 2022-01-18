@@ -20,8 +20,8 @@ class TestDataImportBenchmark(unittest.TestCase):
         root = eilnn.IMAGES_DIR
         folder_train = "example_annotations/data/train"
         folder_val = "example_annotations/data/val"
-        json_train = os.path.join(folder_train, "annotations.json")
-        json_val = os.path.join(folder_val, "annotations.json")
+        json_train = os.path.join(root, folder_train, "annotations.json")
+        json_val = os.path.join(root, folder_val, "annotations.json")
 
         if os.path.exists(json_train):
             print("Training annotations saved correctly.")

@@ -88,7 +88,7 @@ class ImportUtils:
         sub_mask = np.asarray(sub_mask)
         sub_mask = np.multiply(sub_mask, 1)
         contours = measure.find_contours(sub_mask, 0.5,
-            positive_orientation="high")
+                positive_orientation="high")
 
         segmentations = []
         polygons = []
@@ -123,7 +123,7 @@ class ImportUtils:
         return regions_model, area
 
     def train_validation_split(self, gray_list,
-                mask_list, gray_filenames, val_split):
+                    mask_list, gray_filenames, val_split):
 
         """
         Shuffles and divides data into train and test subsets

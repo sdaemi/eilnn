@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 import random
 import imgaug
 from mrcnn import utils
-from mrcnn.visualize import display_images
+from mrcnn import visualize
+# from mrcnn.visualize import display_images
 
 
 def load_grayscale(grayscale_path):
@@ -49,7 +50,8 @@ def load_grayscale(grayscale_path):
     if len(image_stack.shape) < 3:
         raise ValueError(
             "Image stack is not 3D/has not been loaded properly - \
-                ensure there are no numbered folders contained in the stack folder"
+                ensure there are no numbered folders contained in \
+                the stack folder"
         )
 
     return image_stack
@@ -155,7 +157,8 @@ def check_augmentation(dataset, augmentation):
     ----------
     dataset : Mask R-CNN image collection
         Collection of images loaded and formatted using
-        Mask R-CNN load_particles() function, part of the ParticlesDataset class.
+        Mask R-CNN load_particles() function, part of the 
+        ParticlesDataset class.
     augmentation : image augmentation used with imgaug package
         DESCRIPTION.
 
@@ -200,10 +203,9 @@ def check_augmentation(dataset, augmentation):
         augmented_mask.shape == original_mask_shape
     ), "Augmentation shouldn't change mask size"
     # Change mask back to bool
-
     # Display image and instances before and after image augmentation
     visualize.display_instances(
-        original_image, original_bbox, 
+        original_image, original_bbox,
         original_mask, class_ids, dataset.class_names
     )
     visualize.display_instances(
