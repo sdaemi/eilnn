@@ -18,7 +18,8 @@ with open(ver_path) as f:
 
 setup(
     name="eilnn",
-    description="A neural network package for segmenting and labelling battery particle images",
+    description=("A neural network package for segmenting and labelling"
+            + " battery particle images"),
     version=main_["__version__"],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
