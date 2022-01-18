@@ -4,10 +4,10 @@ Created on Thu Mar 11 10:06:54 2021
 
 @author: Sohrab Daemi - EIL
 
-Usage: import the module to generate COCO style annotations from 
+Usage: import the module to generate COCO style annotations from
 grayscale images and their respective 8bit label fields.
 
-The images are divided in validation and test subsets, 
+The images are divided in validation and test subsets,
 with folders in model-readable formats
 """
 
@@ -57,7 +57,8 @@ class ImportUtils:
                     pixel_str = str(pixel)
                     sub_mask = sub_masks.get(pixel_str)
                     if sub_mask is None:
-                        sub_masks[pixel_str] = Image.new("1", (width + 2, height + 2))
+                        sub_masks[pixel_str] = \
+                            Image.new("1", (width + 2, height + 2))
                     sub_masks[pixel_str].putpixel((x + 1, y + 1), 1)
         return sub_masks
 
@@ -86,7 +87,8 @@ class ImportUtils:
 
         sub_mask = np.asarray(sub_mask)
         sub_mask = np.multiply(sub_mask, 1)
-        contours = measure.find_contours(sub_mask, 0.5, positive_orientation="high")
+        contours = \
+            measure.find_contours(sub_mask, 0.5, positive_orientation="high")
 
         segmentations = []
         polygons = []
@@ -106,7 +108,6 @@ class ImportUtils:
         x, y, max_x, max_y = multi_poly.bounds
         width = max_x - x
         height = max_y - y
-        bbox = (x, y, width, height)
         area = multi_poly.area
 
         # Create individual particle annotaions here
@@ -123,7 +124,8 @@ class ImportUtils:
         }
         return regions_model, area
 
-    def train_validation_split(self, gray_list, mask_list, gray_filenames, val_split):
+    def train_validation_split(self, gray_list, mask_list,\
+         gray_filenames, val_split):
 
         """
         Shuffles and divides data into train and test subsets for annotation creation
@@ -205,7 +207,8 @@ class ImportUtils:
                 annotations = []
                 particle_regions = []
 
-                # Ensures that whatever the mask image format (8 or 16bit), it will be converted to binary 8bit.
+                # Ensures that whatever the mask image format (8 or 16bit),
+                # it will be converted to binary 8bit.
 
                 mask_image_np = np.where(mask_image_np > mask_image_min, 1, 0)
                 mask_image_np = morphology.binary_erosion(mask_image_np)
