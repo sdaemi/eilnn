@@ -123,7 +123,7 @@ class ImportUtils:
         return regions_model, area
 
     def train_validation_split(
-        self, gray_list, mask_list, gray_filenames, val_split):
+    self, gray_list, mask_list, gray_filenames, val_split):
 
         """
         Shuffles and divides data into train and test subsets
