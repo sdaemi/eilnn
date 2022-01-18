@@ -57,7 +57,8 @@ class ImportUtils:
                     pixel_str = str(pixel)
                     sub_mask = sub_masks.get(pixel_str)
                     if sub_mask is None:
-                        sub_masks[pixel_str] = Image.new("1", (width + 2, height + 2))
+                        sub_masks[pixel_str] = \
+                        Image.new("1", (width + 2, height + 2))
                     sub_masks[pixel_str].putpixel((x + 1, y + 1), 1)
         return sub_masks
 
@@ -86,7 +87,8 @@ class ImportUtils:
 
         sub_mask = np.asarray(sub_mask)
         sub_mask = np.multiply(sub_mask, 1)
-        contours = measure.find_contours(sub_mask, 0.5, positive_orientation="high")
+        contours = measure.find_contours(sub_mask, 0.5,\
+             positive_orientation="high")
 
         segmentations = []
         polygons = []
@@ -120,10 +122,11 @@ class ImportUtils:
         }
         return regions_model, area
 
-    def train_validation_split(self, gray_list, mask_list, gray_filenames, val_split):
+    def train_validation_split(self, gray_list, \
+        mask_list, gray_filenames, val_split):
 
         """
-        Shuffles and divides data into train and test subsets 
+        Shuffles and divides data into train and test subsets
         for annotation creation depending on val_split parameter.
 
         Parameters
@@ -157,9 +160,9 @@ class ImportUtils:
         gray_names_train = gray_names_shuff[0:train_len]
         mask_list_train = mask_list_shuff[0:train_len]
 
-        gray_list_val = gray_list_shuff[train_len + 1 :]
-        gray_names_val = gray_names_shuff[train_len + 1 :]
-        mask_list_val = mask_list_shuff[train_len + 1 :]
+        gray_list_val = gray_list_shuff[train_len + 1:]
+        gray_names_val = gray_names_shuff[train_len + 1:]
+        mask_list_val = mask_list_shuff[train_len + 1:]
 
         train_vars = [gray_list_train, mask_list_train, gray_names_train]
         val_vars = [gray_list_val, mask_list_val, gray_names_val]
@@ -191,14 +194,15 @@ class ImportUtils:
         # Loop through each individual image and
         # generate sub mask and annotations.
 
-        for file_id, (gray_image, mask_image, gray_filename) in enumerate(zip(*data)):
+        for file_id, (gray_image, mask_image, gray_filename) \
+            in enumerate(zip(*data)):
             try:
 
                 mask_image_np = np.asarray(mask_image)
                 annotation_id = 1
                 image_id = 1
                 particle_regions = []
-
+                mask_image_min = np.min(mask_image_np)
                 # Ensures that whatever the mask image format (8 or 16bit),
                 # it will be converted to binary 8bit.
 
@@ -229,7 +233,8 @@ class ImportUtils:
                         continue
 
                 print(
-                    "Saving {} to /data/{} folder..".format(gray_filename, data_subset)
+                    "Saving {} to /data/{} folder..".\
+                        format(gray_filename, data_subset)
                 )
 
                 image_id += 1
@@ -276,7 +281,7 @@ class ImportUtils:
         val_split : float, optional
             Train/test validation split. The default is 0.2.
         first_im : int, optional
-            First image of stack (can be adjusted to skip current collector, air etc). 
+            First image of stack (can be adjusted to skip current collector, air etc).
             The default is 1.
         step : int, optional
             The default is 5.
@@ -306,14 +311,16 @@ class ImportUtils:
         masks_dir = os.path.join(self.ann_dir, "masks/")
 
         # Read grayscale images and labels
-
+        #replace with eilnn functions?
         self.gray_list = [
             cv2.imread(os.path.join(gray_dir + i), 1)
             for i in os.listdir(gray_dir)
             if str("".join(filter(str.isdigit, i)))
         ][first_im::step]
+
         self.gray_filenames = [
-            i for i in os.listdir(gray_dir) if str("".join(filter(str.isdigit, i)))
+            i for i in os.listdir(gray_dir) 
+            if str("".join(filter(str.isdigit, i)))
         ][first_im::step]
         self.mask_list = [
             cv2.imread(os.path.join(masks_dir + i), 0)
