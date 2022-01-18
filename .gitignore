@@ -5,3 +5,4 @@ path_test.ipynb
 .ipynb_checkpoints/path_test-checkpoint.ipynb
 temp/utils_incomplete.py
 temp_test.ipynb
+*.pyc
