@@ -56,7 +56,7 @@ class TestUtils(unittest.TestCase):
         fp_export = os.path.join(root, "test_save")
 
         label_stack = eilnn.load_label(fp)
-        eilnn.save_labels(label_stack, fp_export)
+        eilnn.save_label(label_stack, fp_export)
 
     def test_save_label_error(self):
         # try save a 2D array
@@ -67,7 +67,7 @@ class TestUtils(unittest.TestCase):
         os.mkdir(fp)
 
         with self.assertRaises(ValueError):
-            eilnn.save_labels(error_data, fp)
+            eilnn.save_label(error_data, fp)
         os.rmdir(fp)
 
 

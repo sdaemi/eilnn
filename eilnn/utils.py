@@ -99,7 +99,7 @@ def load_label(label_path):
     return label_stack
 
 
-def save_labels(label_field, label_folder):
+def save_label(label_field, label_folder):
     """
 
     Save label fields to new folder
