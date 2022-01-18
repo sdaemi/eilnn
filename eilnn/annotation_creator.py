@@ -4,10 +4,11 @@ Created on Thu Mar 11 10:06:54 2021
 
 @author: Sohrab Daemi - EIL
 
-Usage: import the module to generate COCO style annotations from grayscale images and their
-respective 8bit label fields. 
+Usage: import the module to generate COCO style annotations from 
+grayscale images and their respective 8bit label fields.
 
-The images are divided in validation and test subsets, with folders in model-readable formats
+The images are divided in validation and test subsets, 
+with folders in model-readable formats
 """
 
 from PIL import Image
@@ -16,12 +17,9 @@ from skimage import measure, morphology
 from shapely.geometry import Polygon, MultiPolygon
 import json
 import os
-import itertools
 import cv2
-import matplotlib.pyplot as plt
 import shutil
 from sklearn.utils import shuffle
-import random
 from pathlib import Path
 
 
@@ -66,8 +64,8 @@ class ImportUtils:
     def create_sub_mask_annotation(self, sub_mask, annotation_id):
 
         """
-        Finds contours of each individual sub-mask and saves the values in a dictionary
-        which is then merged in a .json file.
+        Finds contours of each individual sub-mask and saves the
+        values in a dictionary which is then merged in a .json file.
 
         Parameters
         ----------
@@ -85,8 +83,6 @@ class ImportUtils:
             surface area of particle, used to filter artefacts.
 
         """
-
-        ### TODO: see if there is more elegant way of try pass, (skip images that give an error)
 
         sub_mask = np.asarray(sub_mask)
         sub_mask = np.multiply(sub_mask, 1)
@@ -113,7 +109,7 @@ class ImportUtils:
         bbox = (x, y, width, height)
         area = multi_poly.area
 
-        ##### Create individual particle annotaions here
+        # Create individual particle annotaions here
 
         regions_model = {
             "{}".format(annotation_id): {
@@ -140,16 +136,19 @@ class ImportUtils:
         mask_list : list
             List continaing all label images.
         gray_filenames : list
-            List containing all grayscale filenames (used in json file and when copying images).
+            List containing all grayscale filenames (used in json file and
+            when copying images).
         val_split : float
             Percent split of validation data..
 
         Returns
         -------
         train_vars : list
-            list containing shuffled and split lists of training images, training labels grayscale image filenames.
+            list containing shuffled and split lists of training images,
+            training labels grayscale image filenames.
         val_vars : list
-            list containing shuffled and split lists of validation images, training labels grayscale image filenames.
+            list containing shuffled and split lists of validation images, 
+            training labels grayscale image filenames.
 
         """
 
@@ -173,7 +172,8 @@ class ImportUtils:
     def process_annotations(self, data, data_subset):
 
         """
-        Processes train and validation datasets split and shuffled by the train_validation_split.
+        Processes train and validation datasets split and shuffled by 
+        the train_validation_split.
         Generates sub-mask annotations and merges and saves them into .json file
 
         Parameters
@@ -191,7 +191,7 @@ class ImportUtils:
         model_json_export = {}
         multi_regions = []
 
-        ##### Loop through each individual image and  generate sub mask and annotations.
+        # Loop through each individual image and  generate sub mask and annotations.
 
         for file_id, (gray_image, mask_image, gray_filename) in enumerate(zip(*data)):
             try:
@@ -205,7 +205,7 @@ class ImportUtils:
                 annotations = []
                 particle_regions = []
 
-                #### Ensures that whatever the mask image format (8 or 16bit), it will be converted to binary 8bit.
+                # Ensures that whatever the mask image format (8 or 16bit), it will be converted to binary 8bit.
 
                 mask_image_np = np.where(mask_image_np > mask_image_min, 1, 0)
                 mask_image_np = morphology.binary_erosion(mask_image_np)
@@ -218,12 +218,12 @@ class ImportUtils:
                 all_area = []
 
                 for color, sub_mask in sub_masks.items():
-                    # try:
+
                     model_annotations, area = self.create_sub_mask_annotation(
                         sub_mask, annotation_id
                     )
 
-                    ###### Filter smaller artefacts as these crash the model
+                    # Filter smaller artefacts as these crash the model
 
                     if area >= 500:
                         particle_regions.append(model_annotations)
@@ -240,12 +240,12 @@ class ImportUtils:
                 image_id += 1
                 model_regions_dict = {}
 
-            ####it will skip any non image files (eg. *.info) that might
+            # will skip any non image files (eg. *.info) that might
             except (TypeError):
                 print("Skipped non image file in folder.")
                 pass
 
-            ##### Merge individual particle annotations into single .json
+            # Merge individual particle annotations into single .json
 
             for region, particle_region in enumerate(particle_regions):
                 model_regions_dict.update(particle_region)
@@ -260,7 +260,7 @@ class ImportUtils:
         # except:
         # continue
 
-        ##### Save annotation
+        # Save annotation
         print("Merging annotations..")
         self.json_annotations = {"image_data": multi_regions[:]}
         print("Saving json..")
@@ -280,7 +280,8 @@ class ImportUtils:
         val_split : float, optional
             Train/test validation split. The default is 0.2.
         first_im : int, optional
-            First image of stack (can be adjusted to skip current collector, air etc). The default is 1.
+            First image of stack (can be adjusted to skip current collector, air etc). 
+            The default is 1.
         step : int, optional
             The default is 5.
 
@@ -290,7 +291,7 @@ class ImportUtils:
 
         """
 
-        ##### Create folders for training and validation subsets
+        # Create folders for training and validation subsets
 
         self.out_dir = os.path.join(self.root_dir, "data/")
         if os.path.exists(self.out_dir):
@@ -308,7 +309,7 @@ class ImportUtils:
         print(gray_dir)
         masks_dir = os.path.join(self.ann_dir, "masks/")
 
-        ##### Read grayscale images and labels
+        # Read grayscale images and labels
 
         self.gray_list = [
             cv2.imread(os.path.join(gray_dir + i), 1)
@@ -333,7 +334,7 @@ class ImportUtils:
         data = [train_vars, val_vars]
         data_subset = ["train", "val"]
 
-        ##### Generate annotaions
+        # Generate annotaions
 
         for n, data in enumerate(data):
             self.process_annotations(data, data_subset[n])
