@@ -157,7 +157,7 @@ def check_augmentation(dataset, augmentation):
     ----------
     dataset : Mask R-CNN image collection
         Collection of images loaded and formatted using
-        Mask R-CNN load_particles() function, part of the 
+        Mask R-CNN load_particles() function, part of the
         ParticlesDataset class.
     augmentation : image augmentation used with imgaug package
         DESCRIPTION.
