@@ -126,8 +126,8 @@ class ImportUtils:
      gray_filenames, val_split):
 
         """
-        Shuffles and divides data into train and test subsets for annotation creation
-        depending on val_split parameter.
+        Shuffles and divides data into train and test subsets 
+        for annotation creation depending on val_split parameter.
 
         Parameters
         ----------
@@ -173,8 +173,8 @@ class ImportUtils:
 
         """
         Processes train and validation datasets split and shuffled by
-        the train_validation_split.
-        Generates sub-mask annotations and merges and saves them into .json file
+        the train_validation_split. Generates sub-mask annotations
+        and merges and saves them into .json file
 
         Parameters
         ----------
@@ -188,18 +188,19 @@ class ImportUtils:
         None.
 
         """
-        #model_json_export = {}
+        
         multi_regions = []
 
-        # Loop through each individual image and  generate sub mask and annotations.
+        # Loop through each individual image and 
+        # generate sub mask and annotations.
 
-        for file_id, (gray_image, mask_image, gray_filename) in enumerate(zip(*data)):
+        for file_id, (gray_image, mask_image, gray_filename) \
+        in enumerate(zip(*data)):
             try:
 
                 mask_image_np = np.asarray(mask_image)
                 annotation_id = 1
                 image_id = 1
-                
                 particle_regions = []
 
                 # Ensures that whatever the mask image format (8 or 16bit),
@@ -232,7 +233,8 @@ class ImportUtils:
                         continue
 
                 print(
-                    "Saving {} to /data/{} folder..".format(gray_filename, data_subset)
+                    "Saving {} to /data/{} folder..".format(
+                        gray_filename, data_subset)
                 )
 
                 image_id += 1
@@ -270,7 +272,7 @@ class ImportUtils:
     def create_annotations(self, val_split=0.2, first_im=1, step=2):
 
         """
-        Function imports grayscale and label fields for further processing, 
+        Function imports grayscale and label fields for further processing,
         creates folders for export and splits data into test and train arrays
         before creating annotations.
 
