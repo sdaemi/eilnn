@@ -88,7 +88,7 @@ class ImportUtils:
         sub_mask = np.asarray(sub_mask)
         sub_mask = np.multiply(sub_mask, 1)
         contours = measure.find_contours(sub_mask, 0.5,
-             positive_orientation="high")
+            positive_orientation="high")
 
         segmentations = []
         polygons = []
@@ -123,7 +123,7 @@ class ImportUtils:
         return regions_model, area
 
     def train_validation_split(self, gray_list,
-            mask_list, gray_filenames, val_split):
+                mask_list, gray_filenames, val_split):
 
         """
         Shuffles and divides data into train and test subsets
@@ -235,7 +235,7 @@ class ImportUtils:
 
                 print(
                     "Saving {} to /data/{} folder..".
-                        format(gray_filename, data_subset)
+                    format(gray_filename, data_subset)
                 )
 
                 image_id += 1
@@ -283,7 +283,7 @@ class ImportUtils:
         val_split : float, optional
             Train/test validation split. The default is 0.2.
         first_im : int, optional
-            First image of stack 
+            First image of stack
             (can be adjusted to skip current collector, air etc).
             The default is 1.
         step : int, optional

@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 import random
 import imgaug
 from mrcnn import utils
-from mrcnn import visualize
 from mrcnn.visualize import display_images
 
 
@@ -89,8 +88,8 @@ def load_label(label_path):
 
     if len(label_stack.shape) < 3:
         raise ValueError(
-            "Label stack is not 3D/has not been loaded properly - ensure there \
-             are no numbered folders contained in the stack folder"
+            "Label stack is not 3D/has not been loaded properly -\
+            ensure there are no numbered files contained in the stack folder"
         )
     # Turn label stack into binary (0, 1), regardless of input
     label_stack = np.where(label_stack > 0, 1, 0)
@@ -155,7 +154,7 @@ def check_augmentation(dataset, augmentation):
     Parameters
     ----------
     dataset : Mask R-CNN image collection
-        Collection of images loaded and formatted using 
+        Collection of images loaded and formatted using
         Mask R-CNN load_particles() function, part of the ParticlesDataset class.
     augmentation : image augmentation used with imgaug package
         DESCRIPTION.
@@ -188,7 +187,8 @@ def check_augmentation(dataset, augmentation):
     det = augmentation.to_deterministic()
     augmented_image = det.augment_image(original_image)
     augmented_mask = det.augment_image(
-        original_mask.astype(np.uint8), hooks=imgaug.HooksImages(activator=hook)
+        original_mask.astype(np.uint8),
+        hooks=imgaug.HooksImages(activator=hook)
     )
     augmented_bbox = utils.extract_bboxes(augmented_mask)
 
@@ -203,8 +203,10 @@ def check_augmentation(dataset, augmentation):
 
     # Display image and instances before and after image augmentation
     visualize.display_instances(
-        original_image, original_bbox, original_mask, class_ids, dataset.class_names
+        original_image, original_bbox, 
+        original_mask, class_ids, dataset.class_names
     )
     visualize.display_instances(
-        augmented_image, augmented_bbox, augmented_mask, class_ids, dataset.class_names
+        augmented_image, augmented_bbox,
+        augmented_mask, class_ids, dataset.class_names
     )
