@@ -57,8 +57,8 @@ class ImportUtils:
                     pixel_str = str(pixel)
                     sub_mask = sub_masks.get(pixel_str)
                     if sub_mask is None:
-                        sub_masks[pixel_str] = \
-                        Image.new("1", (width + 2, height + 2))
+                        sub_masks[pixel_str] = Image.new(
+                            "1", (width + 2, height + 2))
                     sub_masks[pixel_str].putpixel((x + 1, y + 1), 1)
         return sub_masks
 
@@ -87,7 +87,7 @@ class ImportUtils:
 
         sub_mask = np.asarray(sub_mask)
         sub_mask = np.multiply(sub_mask, 1)
-        contours = measure.find_contours(sub_mask, 0.5,\
+        contours = measure.find_contours(sub_mask, 0.5,
              positive_orientation="high")
 
         segmentations = []
@@ -122,8 +122,8 @@ class ImportUtils:
         }
         return regions_model, area
 
-    def train_validation_split(self, gray_list, \
-        mask_list, gray_filenames, val_split):
+    def train_validation_split(self, gray_list,
+            mask_list, gray_filenames, val_split):
 
         """
         Shuffles and divides data into train and test subsets
@@ -195,7 +195,7 @@ class ImportUtils:
         # generate sub mask and annotations.
 
         for file_id, (gray_image, mask_image, gray_filename) \
-            in enumerate(zip(*data)):
+                in enumerate(zip(*data)):
             try:
 
                 mask_image_np = np.asarray(mask_image)
@@ -208,7 +208,8 @@ class ImportUtils:
 
                 mask_image_np = np.where(mask_image_np > mask_image_min, 1, 0)
                 mask_image_np = morphology.binary_erosion(mask_image_np)
-                mask_image_np = morphology.remove_small_holes(mask_image_np, 15000)
+                mask_image_np = morphology.remove_small_holes(
+                    mask_image_np, 15000)
                 mask_image_np = measure.label(mask_image_np)
                 mask_image_np = (mask_image_np * 255).astype(np.uint8)
 
@@ -233,7 +234,7 @@ class ImportUtils:
                         continue
 
                 print(
-                    "Saving {} to /data/{} folder..".\
+                    "Saving {} to /data/{} folder..".
                         format(gray_filename, data_subset)
                 )
 
@@ -254,7 +255,8 @@ class ImportUtils:
                     "regions": model_regions_dict,
                 }
                 cv2.imwrite(
-                    os.path.join(self.out_dir, data_subset, gray_filename), gray_image
+                    os.path.join(
+                        self.out_dir, data_subset, gray_filename), gray_image
                 )
                 multi_regions.append(multi_region)
         # except:
@@ -281,7 +283,8 @@ class ImportUtils:
         val_split : float, optional
             Train/test validation split. The default is 0.2.
         first_im : int, optional
-            First image of stack (can be adjusted to skip current collector, air etc).
+            First image of stack 
+            (can be adjusted to skip current collector, air etc).
             The default is 1.
         step : int, optional
             The default is 5.
@@ -311,7 +314,7 @@ class ImportUtils:
         masks_dir = os.path.join(self.ann_dir, "masks/")
 
         # Read grayscale images and labels
-        #replace with eilnn functions?
+        # replace with eilnn functions?
         self.gray_list = [
             cv2.imread(os.path.join(gray_dir + i), 1)
             for i in os.listdir(gray_dir)
@@ -319,7 +322,7 @@ class ImportUtils:
         ][first_im::step]
 
         self.gray_filenames = [
-            i for i in os.listdir(gray_dir) 
+            i for i in os.listdir(gray_dir)
             if str("".join(filter(str.isdigit, i)))
         ][first_im::step]
         self.mask_list = [
