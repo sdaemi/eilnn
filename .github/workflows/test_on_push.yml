@@ -22,7 +22,7 @@ jobs:
     - run: pip install flake8==3.8.0
     - uses: TrueBrain/actions-flake8@v2
       with:
-        ignore: F401,W503,E128
+        ignore: F401,W503,E128,F403
           
         
   build:
