@@ -57,8 +57,7 @@ class ImportUtils:
                     pixel_str = str(pixel)
                     sub_mask = sub_masks.get(pixel_str)
                     if sub_mask is None:
-                        sub_masks[pixel_str] = \
-                            Image.new("1", (width + 2, height + 2))
+                        sub_masks[pixel_str] = Image.new("1", (width + 2, height + 2))
                     sub_masks[pixel_str].putpixel((x + 1, y + 1), 1)
         return sub_masks
 
@@ -87,8 +86,7 @@ class ImportUtils:
 
         sub_mask = np.asarray(sub_mask)
         sub_mask = np.multiply(sub_mask, 1)
-        contours = \
-            measure.find_contours(sub_mask, 0.5, positive_orientation="high")
+        contours = measure.find_contours(sub_mask, 0.5, positive_orientation="high")
 
         segmentations = []
         polygons = []
@@ -122,8 +120,7 @@ class ImportUtils:
         }
         return regions_model, area
 
-    def train_validation_split(self, gray_list, mask_list,
-     gray_filenames, val_split):
+    def train_validation_split(self, gray_list, mask_list, gray_filenames, val_split):
 
         """
         Shuffles and divides data into train and test subsets 
@@ -160,9 +157,9 @@ class ImportUtils:
         gray_names_train = gray_names_shuff[0:train_len]
         mask_list_train = mask_list_shuff[0:train_len]
 
-        gray_list_val = gray_list_shuff[train_len + 1:]
-        gray_names_val = gray_names_shuff[train_len + 1:]
-        mask_list_val = mask_list_shuff[train_len + 1:]
+        gray_list_val = gray_list_shuff[train_len + 1 :]
+        gray_names_val = gray_names_shuff[train_len + 1 :]
+        mask_list_val = mask_list_shuff[train_len + 1 :]
 
         train_vars = [gray_list_train, mask_list_train, gray_names_train]
         val_vars = [gray_list_val, mask_list_val, gray_names_val]
@@ -188,14 +185,13 @@ class ImportUtils:
         None.
 
         """
-        
+
         multi_regions = []
 
-        # Loop through each individual image and 
+        # Loop through each individual image and
         # generate sub mask and annotations.
 
-        for file_id, (gray_image, mask_image, gray_filename) \
-        in enumerate(zip(*data)):
+        for file_id, (gray_image, mask_image, gray_filename) in enumerate(zip(*data)):
             try:
 
                 mask_image_np = np.asarray(mask_image)
@@ -233,8 +229,7 @@ class ImportUtils:
                         continue
 
                 print(
-                    "Saving {} to /data/{} folder..".format(
-                        gray_filename, data_subset)
+                    "Saving {} to /data/{} folder..".format(gray_filename, data_subset)
                 )
 
                 image_id += 1
