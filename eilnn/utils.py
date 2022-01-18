@@ -11,9 +11,7 @@ import numpy as np
 import shutil
 import matplotlib.pyplot as plt
 import random
-import imgaug
-from mrcnn import utils
-from mrcnn import visualize
+
 # from mrcnn.visualize import display_images
 
 
@@ -149,66 +147,3 @@ def view_GPU():
     print(device_lib.list_local_devices())
 
 
-def check_augmentation(dataset, augmentation):
-    """
-    Visualises effect of image agumentation on image from dataset
-
-    Parameters
-    ----------
-    dataset : Mask R-CNN image collection
-        Collection of images loaded and formatted using
-        Mask R-CNN load_particles() function, part of the
-        ParticlesDataset class.
-    augmentation : image augmentation used with imgaug package
-        DESCRIPTION.
-
-    """
-    image_id = random.choice(dataset.image_ids)
-    original_image = dataset.load_image(image_id)
-    original_mask, class_ids = dataset.load_mask(image_id)
-
-    original_image_shape = original_image.shape
-    original_mask_shape = original_mask.shape
-
-    original_bbox = utils.extract_bboxes(original_mask)
-
-    MASK_AUGMENTERS = [
-        "Sequential",
-        "SomeOf",
-        "OneOf",
-        "Sometimes",
-        "Fliplr",
-        "Flipud",
-        "CropAndPad",
-        "Affine",
-        "PiecewiseAffine",
-    ]
-
-    def hook(images, augmenter, parents, default):
-        return augmenter.__class__.__name__ in MASK_AUGMENTERS
-
-    det = augmentation.to_deterministic()
-    augmented_image = det.augment_image(original_image)
-    augmented_mask = det.augment_image(
-        original_mask.astype(np.uint8),
-        hooks=imgaug.HooksImages(activator=hook)
-    )
-    augmented_bbox = utils.extract_bboxes(augmented_mask)
-
-    # Verify that shapes didn't change
-    assert (
-        augmented_image.shape == original_image_shape
-    ), "Augmentation shouldn't change image size"
-    assert (
-        augmented_mask.shape == original_mask_shape
-    ), "Augmentation shouldn't change mask size"
-    # Change mask back to bool
-    # Display image and instances before and after image augmentation
-    visualize.display_instances(
-        original_image, original_bbox,
-        original_mask, class_ids, dataset.class_names
-    )
-    visualize.display_instances(
-        augmented_image, augmented_bbox,
-        augmented_mask, class_ids, dataset.class_names
-    )
