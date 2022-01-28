@@ -6,6 +6,7 @@ import eilnn
 import unittest
 import os
 import numpy as np
+import shutil
 
 
 class TestUtils(unittest.TestCase):
@@ -69,7 +70,18 @@ class TestUtils(unittest.TestCase):
         with self.assertRaises(ValueError):
             eilnn.save_label(error_data, fp)
         os.rmdir(fp)
-
+        
+    def test_pickles(self):
+        test_data = np.empty([2, 2])
+        root = eilnn.IMAGES_DIR
+        dummy_folder = "dummy_pickles"
+        folder_path = os.path.join(root, dummy_folder)
+        os.mkdir(folder_path)
+        dummy_pickle = os.path.join(folder_path, 'dummy.txt')
+        eilnn.save_pickles(test_data,dummy_pickle)
+        data = eilnn.load_pickles(dummy_pickle, 1)
+        shutil.rmtree(folder_path)
+        
 
 if __name__ == "__main__":
     unittest.main()

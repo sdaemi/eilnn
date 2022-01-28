@@ -11,6 +11,7 @@ import numpy as np
 import shutil
 import matplotlib.pyplot as plt
 import random
+import pickle
 
 # from mrcnn.visualize import display_images
 
@@ -145,3 +146,46 @@ def view_GPU():
     from tensorflow.python.client import device_lib
 
     print(device_lib.list_local_devices())
+
+
+def load_pickles(path, n=1):
+    """
+    Read pickles and convert into numpy array.
+
+    Parameters
+    ----------
+    path : string
+        pickles filepath.
+    n : int
+        0 if loaded data is to be kept in the same format, 1 if it needs to be converted in numpy array
+    Returns
+    -------
+    X : loaded data
+
+    """
+    with open(path, "rb") as fp:
+        print("Loading " + path)
+        if n==1:
+            data = np.array(pickle.load(fp))
+        elif n==0:
+            data = pickle.load(fp)
+    return data
+
+
+def save_pickles(data, path):
+    """
+    Write pickles to drive.
+
+    Parameters
+    ----------
+    path : string
+        pickles saving path.
+
+    Returns
+    -------
+    None.
+
+    """
+    with open(path, "wb") as fp:
+        print("Saving " + path)
+        pickle.dump(data, fp)

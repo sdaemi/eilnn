@@ -166,7 +166,7 @@ class Segment_3D:
         print("Done Extended Minima")
         mlabel, N = label(mask, return_num=True)
 
-        W = watershed(D, markers=mlabel, mask=im)  # .astype(float)
+        W = watershed(D, markers=mlabel, mask=im)  
         return W
 
     def process_segm(self):
@@ -195,8 +195,10 @@ class Segment_3D:
             ]
 
             particles[particle] = image
-
-        return particles
+        background_val = self.grayscale_data[0,0,0,0]
+        
+        
+        return particles, background_val
 
 
 if __name__ == "__main__":
