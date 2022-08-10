@@ -8,6 +8,6 @@ from .annotation_creator import *
 from .utils import *
 from .definitions import *
 from .segment import *
-
+from . tflog2pandas import *
 
 __version__ = "0.0.1"
