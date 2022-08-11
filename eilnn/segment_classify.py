@@ -6,9 +6,6 @@ Created on Wed Jun 15 10:33:22 2022
 """
 import eilnn
 
-
-
-
 def segment_classify(model_segm, grayscale_dir, model_class, marker_size=8, export_path = ''):
         segment = eilnn.Segment_3D(model_segm, grayscale_dir, marker_size)
         particles, masks, watershed = segment.process_segm()
