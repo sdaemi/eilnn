@@ -25,7 +25,6 @@ class ImportUtils:
     def __init__(self, root_dir):
 
         self.root_dir = root_dir
-        # self.data_subset = data_subset
 
     def create_sub_masks(self, mask_image):
 
@@ -287,20 +286,25 @@ class ImportUtils:
 
         # Create folders for training and validation subsets
 
-        self.out_dir = os.path.join(self.root_dir, "data/")
+        parent_dir = os.path.dirname(os.path.dirname(self.root_dir))
+        parent_dir = os.path.abspath(parent_dir)
+        
+        self.out_dir =os.path.abspath(parent_dir + '/data')
+        
         if os.path.exists(self.out_dir):
             shutil.rmtree(self.out_dir)
             os.mkdir(self.out_dir)
         else:
             os.mkdir(self.out_dir)
 
-        self.ann_dir = os.path.join(self.root_dir, "data_ann/")
+        self.ann_dir = os.path.join(self.root_dir)
         self.ann_dir = os.path.abspath(self.ann_dir)
 
         os.mkdir(os.path.join(self.out_dir, "train/"))
         os.mkdir(os.path.join(self.out_dir, "val/"))
         gray_dir = os.path.join(self.ann_dir, "grayscale/")
-        print(gray_dir)
+        print("Loading grayscale images from: ", gray_dir)
+        print("Saving train and validation sets in: ", self.out_dir)
         masks_dir = os.path.join(self.ann_dir, "masks/")
 
         # Read grayscale images and labels
@@ -335,17 +339,8 @@ class ImportUtils:
             self.process_annotations(data, data_subset[n])
 
 if __name__ == "__main__":
-    #cwd = Path(os.getcwd())
-    #cwd_parent = cwd.parent.absolute()
-    #val_split = 0.2
-    #first_im = 1
-    #folder = "images/test_annotations"
-    #image_path = os.path.join(cwd_parent, folder)
-    #test = ImportUtils(image_path)
-    #test.create_annotations(val_split, first_im)
     val_split = 0.3
     first_im = 1
-    #folder = 'subset_single tests'
     folder = 'subset_repeat'
     test = ImportUtils(os.path.join('C:/Users/Sohrab/Documents/crack/EILNet_tf2/images/', folder))
     test.create_annotations(val_split, first_im) 
