@@ -15,3 +15,7 @@ $ cd eil-nn
 # Install the eilnn package from within the repository
 $ pip install -e .
 ```
+
+## Usage
+
+The two example notebooks in the "examples" fodler indicate the two main functionalities of the package, namely automated COCO-style annotation generation and segmentation + classification. Please note for this iteration of package, Mask R-CNN (preferably GPU enabled) *must* be previously installed.
