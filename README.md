@@ -19,3 +19,5 @@ $ pip install -e .
 ## Usage
 
 The two example notebooks in the "examples" fodler indicate the two main functionalities of the package, namely automated COCO-style annotation generation and segmentation + classification. Please note for this iteration of package, Mask R-CNN (preferably GPU enabled) *must* be previously installed.
+
+Currently, features such as the removal of partially truncated particles are tailored to data collected using a lab-based Zeiss Ultra 810 X-ray computed tomography instrument. If you need to analyse other types of data, please feel free to get in touch.
