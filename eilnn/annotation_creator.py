@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 """
 Created on Thu Mar 11 10:06:54 2021
-
 @author: Sohrab Daemi - EIL
-
 Usage: import the module to generate COCO style annotations from
 grayscale images and their respective 8bit label fields.
-
 The images are divided in validation and test subsets,
 with folders in model-readable formats
 """
@@ -21,29 +18,26 @@ import cv2
 import shutil
 from sklearn.utils import shuffle
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 
 class ImportUtils:
     def __init__(self, root_dir):
 
         self.root_dir = root_dir
-        # self.data_subset = data_subset
 
     def create_sub_masks(self, mask_image):
 
         """
         Creates sub masks from which annotations will be generated
-
         Parameters
         ----------
         mask_image : RGB image (PIL)
             individual label image to generate sub_masks from.
-
         Returns
         -------
         sub_masks : PIL image
             sub_mask image.
-
         """
 
         width, height = mask_image.size
@@ -67,22 +61,18 @@ class ImportUtils:
         """
         Finds contours of each individual sub-mask and saves the
         values in a dictionary which is then merged in a .json file.
-
         Parameters
         ----------
         sub_mask : PIL image
             sub mask image with individual particle.
-
         annotation_id : int
             particle identifier (first particle 1, second particle 2 etc).
-
         Returns
         -------
         regions_model : dict
             dictionary containing particle annotations.
         area : int
             surface area of particle, used to filter artefacts.
-
         """
 
         sub_mask = np.asarray(sub_mask)
@@ -128,7 +118,6 @@ class ImportUtils:
         """
         Shuffles and divides data into train and test subsets
         for annotation creation depending on val_split parameter.
-
         Parameters
         ----------
         gray_list : list
@@ -140,7 +129,6 @@ class ImportUtils:
             when copying images).
         val_split : float
             Percent split of validation data.
-
         Returns
         -------
         train_vars : list
@@ -149,7 +137,6 @@ class ImportUtils:
         val_vars : list
             list containing shuffled and split lists of validation images,
             training labels grayscale image filenames.
-
         """
 
         train_len = int(len(mask_list) * (1 - val_split))
@@ -175,18 +162,15 @@ class ImportUtils:
         Processes train and validation datasets split and shuffled by
         the train_validation_split. Generates sub-mask annotations
         and merges and saves them into .json file
-
         Parameters
         ----------
         data : list
             List containing images.
         data_subset : str
             Data subset (train or val) for saving in correct folder.
-
         Returns
         -------
         None.
-
         """
 
         multi_regions = []
@@ -206,14 +190,22 @@ class ImportUtils:
                 # Ensures that whatever the mask image format (8 or 16bit),
                 # it will be converted to binary 8bit.
 
-                mask_image_np = np.where(mask_image_np > mask_image_min, 1, 0)
+               
+                if len(np.unique(mask_image_np))==2:
+                    mask_image_np = np.where(mask_image_np > mask_image_min, 1, 0)
+                    mask_image_np = 1 - mask_image_np
+                elif len(np.unique(mask_image_np))>2:
+                    mask_image_np = np.where(mask_image_np > mask_image_min, 1, 0)
+                
                 mask_image_np = morphology.binary_erosion(mask_image_np)
                 mask_image_np = morphology.remove_small_holes(
-                    mask_image_np, 15000)
+                    mask_image_np, 1500)
+                
                 mask_image_np = measure.label(mask_image_np)
                 mask_image_np = (mask_image_np * 255).astype(np.uint8)
 
                 mask_image_rgb = Image.fromarray(mask_image_np).convert("RGB")
+
                 sub_masks = self.create_sub_masks(mask_image_rgb)
                 all_area = []
 
@@ -225,12 +217,12 @@ class ImportUtils:
 
                     # Filter smaller artefacts as these crash the model
 
-                    if area >= 500:
+                    if area >= 350:
                         particle_regions.append(model_annotations)
                         annotation_id += 1
                         all_area.append(area)
 
-                    elif area < 500:
+                    elif area < 350:
                         continue
 
                 print(
@@ -271,13 +263,12 @@ class ImportUtils:
         with open(export_path, "w") as outfile:
             json.dump(self.json_annotations, outfile)
 
-    def create_annotations(self, val_split=0.2, first_im=1, step=2):
+    def create_annotations(self, val_split=0.2, first_im=1, step=1):
 
         """
         Function imports grayscale and label fields for further processing,
         creates folders for export and splits data into test and train arrays
         before creating annotations.
-
         Parameters
         ----------
         val_split : float, optional
@@ -288,29 +279,32 @@ class ImportUtils:
             The default is 1.
         step : int, optional
             The default is 5.
-
         Returns
         -------
         None.
-
         """
 
         # Create folders for training and validation subsets
 
-        self.out_dir = os.path.join(self.root_dir, "data/")
+        parent_dir = os.path.dirname(os.path.dirname(self.root_dir))
+        parent_dir = os.path.abspath(parent_dir)
+        
+        self.out_dir =os.path.abspath(parent_dir + '/data')
+        
         if os.path.exists(self.out_dir):
             shutil.rmtree(self.out_dir)
             os.mkdir(self.out_dir)
         else:
             os.mkdir(self.out_dir)
 
-        self.ann_dir = os.path.join(self.root_dir, "data_ann/")
+        self.ann_dir = os.path.join(self.root_dir)
         self.ann_dir = os.path.abspath(self.ann_dir)
 
         os.mkdir(os.path.join(self.out_dir, "train/"))
         os.mkdir(os.path.join(self.out_dir, "val/"))
         gray_dir = os.path.join(self.ann_dir, "grayscale/")
-        print(gray_dir)
+        print("Loading grayscale images from: ", gray_dir)
+        print("Saving train and validation sets in: ", self.out_dir)
         masks_dir = os.path.join(self.ann_dir, "masks/")
 
         # Read grayscale images and labels
@@ -326,12 +320,11 @@ class ImportUtils:
             if str("".join(filter(str.isdigit, i)))
         ][first_im::step]
         self.mask_list = [
-            cv2.imread(os.path.join(masks_dir + i), 0)
+            cv2.imread(os.path.join(masks_dir + i), -1)
             for i in os.listdir(masks_dir)
             if str("".join(filter(str.isdigit, i)))
         ][first_im::step]
 
-        print(np.asarray(self.gray_list).shape)
         print("Images Loaded..")
 
         train_vars, val_vars = self.train_validation_split(
@@ -345,13 +338,9 @@ class ImportUtils:
         for n, data in enumerate(data):
             self.process_annotations(data, data_subset[n])
 
-
 if __name__ == "__main__":
-    cwd = Path(os.getcwd())
-    cwd_parent = cwd.parent.absolute()
-    val_split = 0.2
+    val_split = 0.3
     first_im = 1
-    folder = "images/test_annotations"
-    image_path = os.path.join(cwd_parent, folder)
-    test = ImportUtils(image_path)
-    test.create_annotations(val_split, first_im)
+    folder = 'subset_repeat'
+    test = ImportUtils(os.path.join('C:/Users/Sohrab/Documents/crack/EILNet_tf2/images/', folder))
+    test.create_annotations(val_split, first_im) 

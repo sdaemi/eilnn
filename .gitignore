@@ -6,3 +6,8 @@ path_test.ipynb
 temp/utils_incomplete.py
 temp_test.ipynb
 *.pyc
+model/saved_model.pb
+model/variables/variables.data-00000-of-00001
+model/variables/variables.data-00000-of-00002
+model/variables/variables.data-00001-of-00002
+model/variables/variables.index

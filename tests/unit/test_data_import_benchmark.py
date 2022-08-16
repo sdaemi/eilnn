@@ -11,15 +11,15 @@ class TestAnnotationCreator(unittest.TestCase):
         root = eilnn.IMAGES_DIR
         val_split = 0.2
         first_im = 1
-        folder = "example_annotations"
+        folder = "tests/example_annotations/data_ann"
         image_folder = os.path.join(root, folder)
         test = eilnn.ImportUtils(image_folder)
         test.create_annotations(val_split, first_im)
 
     def test_json_exists(self):
         root = eilnn.IMAGES_DIR
-        folder_train = "example_annotations/data/train"
-        folder_val = "example_annotations/data/val"
+        folder_train = "tests/example_annotations/data/train"
+        folder_val = "tests/example_annotations/data/val"
         json_train = os.path.join(root, folder_train, "annotations.json")
         json_val = os.path.join(root, folder_val, "annotations.json")
 
