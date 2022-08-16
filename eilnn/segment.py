@@ -50,7 +50,7 @@ class Segment_3D:
         self.grayscale_data = eilnn.load_grayscale(image_path)
 
     def segment_2d(self, model_inference, image_stack):
-        '''
+        """
         Basic segmentation block that operates on individual slices.
 
         Parameters
@@ -65,7 +65,7 @@ class Segment_3D:
         label_field : ndarray
             segmented binary label field.
 
-        '''
+        """
         label_field = np.zeros(
             (image_stack.shape[1], image_stack.shape[2], image_stack.shape[0]),
             dtype=bool,
@@ -85,9 +85,8 @@ class Segment_3D:
 
         return label_field
 
-
     def segment_xz(self, model_inference, image_stack):
-        '''
+        """
         Rotates and resamples the image stack in the xz direction, segments and restores original orientation
 
         Parameters
@@ -102,7 +101,7 @@ class Segment_3D:
         label_field : ndarray
             segmented and resampled binary label field.
 
-        '''
+        """
         stack_resampled = np.swapaxes(np.swapaxes(image_stack, 0, 2), 1, 2)
         stack_resampled = np.flip(np.flip(stack_resampled, 1), 2)
         label_field = self.segment_2d(model_inference, stack_resampled)
@@ -110,9 +109,8 @@ class Segment_3D:
         label_field = np.moveaxis(label_field, 0, -1)
         return label_field
 
-
     def segment_yz(self, model_inference, image_stack):
-        '''
+        """
         Rotates and resamples the image stack in the yz direction, segments and restores original orientation
 
         Parameters
@@ -127,7 +125,7 @@ class Segment_3D:
         label_field : ndarray
             segmented and resampled binary label field.
 
-        '''
+        """
         stack_resampled = np.swapaxes(image_stack, 0, 2)
         stack_resampled = np.swapaxes(stack_resampled, 1, 2)
         stack_resampled = np.flip(stack_resampled, 1)
@@ -137,7 +135,7 @@ class Segment_3D:
         return label_field
 
     def union(self, label_field, label_xz, label_yz):
-        '''
+        """
         Adds original and resampled label fields together to compensate for any slice-like artefacts.
 
         Parameters
@@ -154,14 +152,14 @@ class Segment_3D:
         label : ndarray
             union of resampled (3) label fields.
 
-        '''
+        """
         label = label_field + label_xz + label_yz
         label = np.moveaxis(label, -1, 0)
         label[label > 0] = 1
         return label
 
     def segment_3d(self, model, data):
-        '''
+        """
         
 
         Parameters
@@ -176,7 +174,7 @@ class Segment_3D:
         label_3d : ndarray
             binary segmentation in three directions.
 
-        '''
+        """
         label = self.segment_2d(model, data)
         label_xz = self.segment_xz(model, data)
         label_yz = self.segment_yz(model, data)
@@ -184,7 +182,7 @@ class Segment_3D:
         return label_3d
 
     def filtering(self, labels):
-        '''
+        """
         Filters the binary label image to remove slice artefacts
         combination of opening, guassian filters, erosion and hole removal
 
@@ -198,7 +196,7 @@ class Segment_3D:
         label_filtered : ndarray
             filtered segmented label stack.
 
-        '''
+        """
         label_filtered = binary_opening(labels)
         label_filtered = gaussian_filter(label_filtered, sigma=0.75)
         for i in range(1, 3):
@@ -221,7 +219,7 @@ class Segment_3D:
         return label_filtered
 
     def display_filters(self, grayscale_stack, label_3d, label_filtered):
-        '''
+        """
         Displays the dataset before and after filtering.
 
         Parameters
@@ -237,24 +235,24 @@ class Segment_3D:
         -------
         None.
 
-        '''
+        """
         middle_slice = int(grayscale_stack.shape[0] / 2)
         ix = np.random.randint(
             middle_slice - middle_slice * 0.1, middle_slice + middle_slice * 0.1
         )
         plt.subplot(1, 2, 1)
-        plt.title('No Filter Applied')
+        plt.title("No Filter Applied")
         plt.imshow(grayscale_stack[ix, :, :], alpha=1)
         plt.imshow(label_3d[ix, :, :], alpha=0.4, cmap="Reds")
 
         plt.subplot(1, 2, 2)
-        plt.title('After Filtering')
+        plt.title("After Filtering")
         plt.imshow(grayscale_stack[ix, :, :], alpha=1)
         plt.imshow(label_filtered[ix, :, :], alpha=0.4, cmap="Reds")
         plt.show()
 
     def extendedmin(self, img, h):
-        '''
+        """
         Finds the extended minima for the watershed segmentation
 
         Parameters
@@ -269,14 +267,14 @@ class Segment_3D:
         local minima
 
 
-        '''
+        """
         mask = img.copy()
         marker = mask + h
         hmin = reconstruction(marker, mask, method="erosion")
         return local_minima(hmin)
 
     def watershed_sep(self, im, marker_size=2):
-        '''
+        """
         watershed segmentation
 
         Parameters
@@ -291,7 +289,7 @@ class Segment_3D:
         W : ndarray
             watershed segmentation.
 
-        '''
+        """
         D = -edt(im)
         print("Distance Transform Completed")
         mask = self.extendedmin(D, marker_size)
@@ -303,7 +301,7 @@ class Segment_3D:
         return W
 
     def process_segm(self):
-        '''
+        """
         Processes all steps required to import grayscale data and returns binary segmentation.
 
         Returns
@@ -315,16 +313,17 @@ class Segment_3D:
         separated_stack : ndarray
             3D stack of watershed segmented data.
 
-        '''
+        """
         start = timeit.default_timer()
+        print("Commencing 3D segmentation.")
         labels = self.segment_3d(self.model, self.grayscale_data)
+        print("Filtering labels.")
         labels_filtered = self.filtering(labels)
-        #print("Grayscale array size" + str(self.grayscale_data.shape))
-        print("Label array size" + str(labels.shape)+"\n")
+
+        print("Label array dimensions " + str(labels.shape) + "\n")
         self.display_filters(self.grayscale_data, labels, labels_filtered)
         separated_stack = self.watershed_sep(labels_filtered, self.marker_size)
-        #print(self.grayscale_data.shape)
-        #print(separated_stack.shape)
+
         labelled_stack = cc3d.connected_components(labels_filtered, connectivity=18)
         stats = cc3d.statistics(labelled_stack)
         bounding_boxes = stats["bounding_boxes"]

@@ -21,7 +21,6 @@ import timeit
 import scipy
 
 
-
 class classifier:
     def __init__(self, model_class, particles, masks, export_path=""):
         """
@@ -145,7 +144,7 @@ class classifier:
 
         """
         masks_removed = [masks[i] for i in range(0, masks.shape[0]) if i not in idx]
-        masks_removed = np.asarray(masks_removed, dtype='object')
+        masks_removed = np.asarray(masks_removed, dtype="object")
         return masks_removed
 
     def resize_slice(self, particles, resize_row=128, resize_col=128):
@@ -237,12 +236,11 @@ class classifier:
         x_dims = [
             particles_numpy[i].shape[2] for i in range(0, particles_numpy.shape[0])
         ]
-        #plt.scatter(x_dims, y_dims)
-        #plt.xlabel("X axis size / px")
+        # plt.scatter(x_dims, y_dims)
+        # plt.xlabel("X axis size / px")
 
-        #plt.ylabel("Y axis size / px")
-        #plt.show()
-
+        # plt.ylabel("Y axis size / px")
+        # plt.show()
 
         def mahalanobis_dist(x=None, data=None, cov=None):
             x_minus_mu = x - np.mean(data)
@@ -275,10 +273,10 @@ class classifier:
 
         xy_idx = np.column_stack([xy_removed, idx])
 
-        #plt.scatter(xy_removed[:, 0], xy_removed[:, 1])
-        #plt.xlabel("X axis size / px")
-        #plt.ylabel("Y axis size / px")
-        #plt.show()
+        # plt.scatter(xy_removed[:, 0], xy_removed[:, 1])
+        # plt.xlabel("X axis size / px")
+        # plt.ylabel("Y axis size / px")
+        # plt.show()
         particles_removed = np.take(particles_numpy, np.squeeze(idx), axis=0)
         return particles_removed
 
@@ -585,9 +583,7 @@ class classifier:
             os.mkdir(out_dir)
         else:
             os.mkdir(out_dir)
-
         print("Saving individual particles in " + out_dir)
-
         n_particles = particles.shape[0]
         for j in range(0, n_particles):
             particle = particles[j]
@@ -608,8 +604,6 @@ class classifier:
                     os.path.join(save_path_segm, filename_segm), (segmentation[j][i])
                 )
                 cv2.imwrite(os.path.join(save_path_gray, filename_gray), particle[i])
-
-        print("Complete!")
 
     def classify_particles(self):
         """
