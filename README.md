@@ -1,7 +1,7 @@
 # eilnn
 
 # Overview of eilnn
-*eil-nn* is an image processing toolkit to analyse tomography data for battery electrodes. It uses neural networks to segment the images to identify and classify particles.
+*eil-nn* is an image processing toolkit to analyse tomography data for battery electrodes. It uses neural networks to segment the images and successively identify and classify particles. 
 
 ## Installation
 
