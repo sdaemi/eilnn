@@ -42,7 +42,7 @@ def load_grayscale(grayscale_path):
         ]
     )
 
-    middle_slice = int(image_stack.shape[0] / 2)
+    middle_slice = int(image_stack.shape[0] // 2)
     plt.imshow(image_stack[middle_slice])
     print("Stack Dimensions ", str(image_stack.shape))
 
@@ -56,7 +56,7 @@ def load_grayscale(grayscale_path):
     return image_stack
 
 
-def load_label(label_path):
+def load_label(label_path, multi = 0):
     """
     Loads label stack into numpy array.
 
@@ -83,7 +83,7 @@ def load_label(label_path):
         ]
     )
 
-    middle_slice = int(label_stack.shape[0] / 2)
+    middle_slice = int(label_stack.shape[0] // 2)
     plt.imshow(label_stack[middle_slice])
     print("Stack Dimensions ", str(label_stack.shape))
 
@@ -93,7 +93,8 @@ def load_label(label_path):
             ensure there are no numbered files contained in the stack folder"
         )
     # Turn label stack into binary (0, 1), regardless of input
-    label_stack = np.where(label_stack > 0, 1, 0)
+    if multi == 0:
+        label_stack = np.where(label_stack > 0, 1, 0)
 
     return label_stack
 
