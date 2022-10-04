@@ -12,7 +12,7 @@ import matplotlib.patches as patches
 import timeit
 import eilnn
 
-from numba import cudaimport timeit
+import timeit
 from scipy.ndimage import gaussian_filter
 from skimage.morphology import (
     remove_small_holes,
