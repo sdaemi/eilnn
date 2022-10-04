@@ -36,6 +36,7 @@ setup(
         "pillow",
         "pandas",
         "shapely",
+        "imgaug",
         "opencv-python",
         "scikit-image",
         "scikit-learn",

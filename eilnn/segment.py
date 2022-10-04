@@ -5,27 +5,14 @@ Created on Mon Jan 17 12:26:34 2022
 @author: Sohrab
 """
 
-import os
-import sys
-import random
-import math
-import re
-import time
 import numpy as np
-import skimage
-import imgaug
-import tensorflow as tf
-import matplotlib
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-import cv2
-import shutil
 import timeit
 import eilnn
 
-from samples import particles
-from numba import cuda
-import timeit
+from numba import cudaimport timeit
 from scipy.ndimage import gaussian_filter
 from skimage.morphology import (
     remove_small_holes,
